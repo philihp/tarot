@@ -13,16 +13,28 @@ class Tarot::CommandCommit < Tarot::CommandBase
       if state.board.old_claims.compact.size < state.board.old_claims.size
         state.waiting_for = :init_claim
       else
-        state.board.prepare_for_new_round!
+        if state.board.new_claims.compact.size == state.board.new_claims.size
+          start_new_round(state: state)
+        end
+        state.current_player = state.board.find_next_player
         state.waiting_for = :claim
       end
     elsif state.waiting_for == :commit
-      raise NotImplementedError
+      if(state.board.old_claims.compact.size == 0)
+        start_new_round(state: state)
+      end
+      state.current_player = state.board.find_next_player
+      state.waiting_for = :claim
     else
       raise InvalidMoveException
     end
     state.history << command
     state
+  end
+
+  def start_new_round(state:)
+    state.board.old_claims = state.board.new_claims
+    state.board.new_claims = Array.new(state.board.new_claims.size) { nil }
   end
 
 end
