@@ -41,44 +41,51 @@ class Tarot::State
     command = parse_move(string: move)
     # IMPORTANT
     # play_move returns the new state that the command returns, because states should be immutable
-    command.execute(state: self)
-  end
+    new_state = command.execute(state: self)
 
-  def available_moves
-    case @waiting_for
-    when :init_claim, :claim
-      claim_moves
-    when :init_commit, :commit
-      [ 'commit' ]
-    else
-      []
+    # Undecided if this is a good or a bad thing. If there's only one move,
+    # force the player to take it. Seems cool.
+    while new_state.available_moves.size == 1
+      new_state = new_state.play_move(move: new_state.available_moves[0])
+    end
+
+    new_state
+    end
+
+    def available_moves
+      case @waiting_for
+      when :init_claim, :claim
+        claim_moves
+      when :init_commit, :commit
+        [ 'commit' ]
+      else
+        []
+      end
+    end
+
+    def claim_moves
+      @board.new_claims.each.with_index.inject([]) do |accum,(val,i)|
+        accum << "claim #{i}" if val.nil?
+        accum
+      end
+    end
+
+    def parse_move(string:)
+      case
+      when string.start_with?('claim')
+        Tarot::CommandClaim.new(command: string)
+      when string.start_with?('commit')
+        Tarot::CommandCommit.new(command: string)
+      end
+    end
+
+    def to_json
+      {
+        board: @board.to_json,
+        tableaus: @tableaus.map(&:to_json),
+        history: @history,
+        options: available_moves,
+        _heuristic_score: Heuristic.new(state: self).score
+      }
     end
   end
-
-  def claim_moves
-    @board.new_claims.each.with_index.inject([]) do |accum,(val,i)|
-      accum << "claim #{i}" if val.nil?
-      accum
-    end
-  end
-
-  def parse_move(string:)
-    case
-    when string.start_with?('claim')
-      Tarot::CommandClaim.new(command: string)
-    when string.start_with?('commit')
-      Tarot::CommandCommit.new(command: string)
-    end
-  end
-
-  def to_json
-    {
-      board: @board.to_json,
-      tableaus: @tableaus.map(&:to_json),
-      history: @history,
-      options: available_moves,
-      _heuristic_score: Heuristic.new(state: self).score
-    }
-  end
-
-end
