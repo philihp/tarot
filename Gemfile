@@ -7,3 +7,4 @@ gemspec
 
 gem 'json'
 gem 'rubocop'
+gem 'pry'
