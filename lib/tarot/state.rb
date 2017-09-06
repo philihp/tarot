@@ -46,12 +46,10 @@ class Tarot::State
 
   def available_moves
     case @waiting_for
-    when :init_claim
-      init_claim_moves
+    when :init_claim, :claim
+      claim_moves
     when :init_commit, :commit
       [ 'commit' ]
-    when :claim
-      claim_moves
     else
       []
     end
@@ -59,13 +57,6 @@ class Tarot::State
 
   def claim_moves
     @board.new_claims.each.with_index.inject([]) do |accum,(val,i)|
-      accum << "claim #{i}" if val.nil?
-      accum
-    end
-  end
-
-  def init_claim_moves
-    @board.old_claims.each.with_index.inject([]) do |accum,(val,i)|
       accum << "claim #{i}" if val.nil?
       accum
     end
