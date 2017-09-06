@@ -4,12 +4,18 @@ class Tarot::Tableau
   attr_accessor :land
 
   def initialize(rand:)
-    imagine_future(with: rand)
+    imagine_future!(with: rand)
     @land = []
   end
 
-  def imagine_future(with: Random.new)
+  def imagine_future!(with: Random.new)
     @rand = with
+  end
+
+  def to_json
+    {
+      land: @land
+    }
   end
 
 end

@@ -82,9 +82,9 @@ class Tarot::State
 
   def to_json
     {
-      board: @board,
-      tableaus: @tableaus,
-      history: [],
+      board: @board.to_json,
+      tableaus: @tableaus.map(&:to_json),
+      history: @history,
       options: available_moves,
       _heuristic_score: Heuristic.new(state: self).score
     }

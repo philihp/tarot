@@ -29,5 +29,4 @@ game = game.play_move(move: 'claim 2')
 game = game.play_move(move: 'commit')
 game = game.play_move(move: 'claim 3')
 game = game.play_move(move: 'commit')
-print game.inspect + "\n"
-print "#{game.available_moves}\n"
+pp game.to_json

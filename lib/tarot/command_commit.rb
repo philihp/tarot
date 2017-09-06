@@ -10,7 +10,7 @@ class Tarot::CommandCommit < Tarot::CommandBase
     state = state.dup
     if state.waiting_for == :init_commit
       state.current_player = (state.current_player + 1) % state.players
-      if state.board.old_claims.compact.size < state.board.old_claims.size
+      if state.board.new_claims.compact.size < state.board.new_claims.size
         state.waiting_for = :init_claim
       else
         if state.board.new_claims.compact.size == state.board.new_claims.size
@@ -28,13 +28,15 @@ class Tarot::CommandCommit < Tarot::CommandBase
     else
       raise InvalidMoveException
     end
-    state.history << command
-    state
+    state.history << @command
+    state.freeze
   end
 
   def start_new_round(state:)
     state.board.old_claims = state.board.new_claims
+    state.board.old_display_tiles = state.board.new_display_tiles
     state.board.new_claims = Array.new(state.board.new_claims.size) { nil }
+    state.board.draw_tiles!
   end
 
 end
