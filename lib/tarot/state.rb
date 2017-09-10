@@ -47,8 +47,9 @@ class Tarot::State
     # Undecided if this is a good or a bad thing. If there's only one move,
     # force the player to take it. Seems cool.
     # while new_state.available_moves.size == 1
-    #   new_state = new_state.play_move(move: new_state.available_moves[0])
-    # end
+    while new_state.waiting_for == :commit
+      new_state = new_state.play_move(move: new_state.available_moves[0])
+    end
 
     new_state
   end
@@ -68,6 +69,10 @@ class Tarot::State
 
   def branching_factor
     available_moves.size
+  end
+
+  def terminal?
+    waiting_for.nil? || available_moves.size == 0
   end
 
   def claim_moves

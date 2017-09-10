@@ -12,6 +12,7 @@ end
 
 require 'json'
 require 'pp'
+require 'ap'
 
 # game = Tarot::State.new
 # game = game.play_move(move: game.available_moves[0])

@@ -20,6 +20,10 @@ class Tarot::CommandPlace < Tarot::CommandBase
     claim_index = state.board.old_display_tiles.find_index(&:itself)
     state.tableaus[state.current_player].land << state.board.old_display_tiles[claim_index]
     state.board.old_display_tiles[claim_index] = nil
+
+    # only relevant in last round when places dont preceed claim
+    state.board.old_claims[claim_index] = nil
+
     state.history << @command
     state.waiting_for = :commit
     state.freeze
