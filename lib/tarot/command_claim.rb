@@ -12,16 +12,12 @@ class Tarot::CommandClaim < Tarot::CommandBase
 
   def execute(state:)
     raise InvalidMoveException unless @slot < state.board.old_claims.size
+    raise InvalidMoveException unless state.board.new_claims[@slot].nil?
+    state = state.dup
     if state.waiting_for == :init_claim
-      raise InvalidMoveException unless state.board.new_claims[@slot].nil?
-      state = state.dup
       state.board.new_claims[@slot] = state.current_player
       state.waiting_for = :init_commit
     elsif state.waiting_for == :claim
-      # TODO refactor; DRY :/
-      raise InvalidMoveException unless state.board.new_claims[@slot].nil?
-      state = state.dup
-
       claim_index = state.board.find_next_player_index
       state.board.old_claims[claim_index] = nil
       state.tableaus[state.current_player].land << state.board.old_display_tiles[claim_index]
