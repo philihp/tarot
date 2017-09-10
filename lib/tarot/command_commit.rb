@@ -24,7 +24,7 @@ class Tarot::CommandCommit < Tarot::CommandBase
         start_new_round(state: state)
       end
       state.current_player = state.board.find_next_player
-      state.waiting_for = :claim
+      state.waiting_for = state.board.new_display_tiles.empty? ? :place : :claim
     else
       raise InvalidMoveException
     end
@@ -37,6 +37,10 @@ class Tarot::CommandCommit < Tarot::CommandBase
     state.board.old_display_tiles = state.board.new_display_tiles
     state.board.new_claims = Array.new(state.board.new_claims.size) { nil }
     state.board.draw_tiles!
+
+    if state.board.stacked_tiles.size == 0
+      state.waiting_for = :place
+    end
   end
 
 end

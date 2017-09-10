@@ -7,14 +7,15 @@ module Tarot
   require 'tarot/command_base'
   require 'tarot/command_claim'
   require 'tarot/command_commit'
+  require 'tarot/command_place'
 end
 
 require 'json'
 require 'pp'
 
-game = Tarot::State.new
-game = game.play_move(move: game.available_moves[0])
-game = game.play_move(move: game.available_moves[0])
-game = game.play_move(move: game.available_moves[0])
-game = game.play_move(move: game.available_moves[0])
-pp game.to_json
+# game = Tarot::State.new
+# game = game.play_move(move: game.available_moves[0])
+# game = game.play_move(move: game.available_moves[0])
+# game = game.play_move(move: game.available_moves[0])
+# game = game.play_move(move: game.available_moves[0])
+# pp game.to_json

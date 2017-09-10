@@ -25,6 +25,7 @@ class Tarot::State
     @rand = source.rand.dup
     @board = source.board.dup
     @tableaus = source.tableaus.map(&:dup)
+    @history = source.history.dup
   end
 
   def create_board
@@ -45,51 +46,61 @@ class Tarot::State
 
     # Undecided if this is a good or a bad thing. If there's only one move,
     # force the player to take it. Seems cool.
-    while new_state.available_moves.size == 1
-      new_state = new_state.play_move(move: new_state.available_moves[0])
-    end
+    # while new_state.available_moves.size == 1
+    #   new_state = new_state.play_move(move: new_state.available_moves[0])
+    # end
 
     new_state
-    end
+  end
 
-    def available_moves
-      case @waiting_for
-      when :init_claim, :claim
-        claim_moves
-      when :init_commit, :commit
-        [ 'commit' ]
-      else
-        []
-      end
-    end
-
-    def branching_factor
-      available_moves.size
-    end
-
-    def claim_moves
-      @board.new_claims.each.with_index.inject([]) do |accum,(val,i)|
-        accum << "claim #{i}" if val.nil?
-        accum
-      end
-    end
-
-    def parse_move(string:)
-      case
-      when string.start_with?('claim')
-        Tarot::CommandClaim.new(command: string)
-      when string.start_with?('commit')
-        Tarot::CommandCommit.new(command: string)
-      end
-    end
-
-    def to_json
-      {
-        board: @board.to_json,
-        tableaus: @tableaus.map(&:to_json),
-        history: @history,
-        options: available_moves,
-        _heuristic_score: Heuristic.new(state: self).score
-      }
+  def available_moves
+    case @waiting_for
+    when :init_claim, :claim
+      claim_moves
+    when :init_commit, :commit
+      [ 'commit' ]
+    when :place
+      place_moves
+    else
+      []
     end
   end
+
+  def branching_factor
+    available_moves.size
+  end
+
+  def claim_moves
+    @board.new_claims.each.with_index.inject([]) do |accum,(val,i)|
+      accum << "claim #{i}" if val.nil?
+      accum
+    end
+  end
+
+  def place_moves
+    [ 'place 0 0 h' ]
+  end
+
+  def parse_move(string:)
+    case
+    when string.start_with?('claim')
+      Tarot::CommandClaim.new(command: string)
+    when string.start_with?('commit')
+      Tarot::CommandCommit.new(command: string)
+    when string.start_with?('place')
+      Tarot::CommandPlace.new(command: string)
+    else
+      raise InvalidMoveException, "\"#{string}\""
+    end
+  end
+
+  def to_json
+    {
+      board: @board.to_json,
+      tableaus: @tableaus.map(&:to_json),
+      history: @history,
+      options: available_moves,
+      _heuristic_score: Heuristic.new(state: self).score
+    }
+  end
+end

@@ -20,12 +20,8 @@ class Tarot::CommandClaim < Tarot::CommandBase
     elsif state.waiting_for == :claim
       claim_index = state.board.find_next_player_index
       state.board.old_claims[claim_index] = nil
-      state.tableaus[state.current_player].land << state.board.old_display_tiles[claim_index]
-      state.board.old_display_tiles[claim_index] = nil
       state.board.new_claims[@slot] = state.current_player
-
-      # TODO: this should be :place, but doing that later
-      state.waiting_for = :commit
+      state.waiting_for = :place
     else
       raise InvalidMoveException
     end

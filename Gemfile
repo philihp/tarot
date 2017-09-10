@@ -8,3 +8,4 @@ gemspec
 gem 'json'
 gem 'rubocop'
 gem 'pry'
+gem 'pry-byebug'
