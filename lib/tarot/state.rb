@@ -63,6 +63,10 @@ class Tarot::State
       end
     end
 
+    def branching_factor
+      available_moves.size
+    end
+
     def claim_moves
       @board.new_claims.each.with_index.inject([]) do |accum,(val,i)|
         accum << "claim #{i}" if val.nil?

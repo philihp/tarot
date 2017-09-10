@@ -13,7 +13,8 @@ class Heuristic
     end
   end
 
-  # TODO: This is naive right now, doesn't even look at chunks of one type
+  # TODO: It's easier to just make a linear scoring polynomial here, but could also just score the
+  #       actual board for simplicity. Also we should give some sort of weight to going first next.
   def score_tableau(tableau:)
     terrains = {
       forest: { size: 0, crowns: 0 },
