@@ -9,7 +9,7 @@ class MTCS::Root < MTCS::Node
   end
 
   def best_child
-    children.max_by &:win_percentage
+    children.max_by &:visits
   end
 
   def best_move
@@ -27,17 +27,13 @@ class MTCS::Root < MTCS::Node
     node.backpropagate(win: win)
   end
 
-  def update_win(win:)
-    @visits += 1
-    @wins += 1 unless win
-  end
-
 private
 
   def select
     node = self
     until node.unexplored_moves? || node.leaf? do
-      node = node.utc_select_child
+      # policy of selection
+      node = node.ucb_select_child
     end
     node
   end

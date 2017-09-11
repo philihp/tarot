@@ -56,7 +56,9 @@ class Tarot::State
 
   def random_walk
     return self if terminal?
-    play_move(move: random_move).random_walk
+    state = self.dup
+    state.rand = Random.new
+    state.play_move(move: random_move).random_walk
   end
 
   def available_moves
@@ -123,7 +125,7 @@ class Tarot::State
     available_moves.sample(random: Random.new)
   end
 
-  def suggested_move(times: nil, milliseconds: 1000)
+  def suggested_move(times: nil, milliseconds: 200)
     search = MTCS::Search.new(state: self)
     search.explore(times: times, milliseconds: milliseconds)
     search.root.best_move

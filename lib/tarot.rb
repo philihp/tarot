@@ -31,3 +31,12 @@ require 'ap'
 # game = game.play_move(move: game.available_moves[0])
 # game = game.play_move(move: game.available_moves[0])
 # pp game.to_json
+
+def play_game
+  state = Tarot::State.new
+  while !state.terminal?
+    move = state.current_player == 0 ? state.suggested_move(milliseconds: 100) : state.random_move
+    state = state.play_move(move: move)
+  end
+  state.winner
+end

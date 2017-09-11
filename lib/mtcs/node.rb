@@ -1,13 +1,13 @@
 class MTCS::Node
 
-  attr_reader :parent, :move, :wins, :visits, :children, :state, :unexplored_moves
+  attr_reader :parent, :move, :value, :visits, :children, :state, :unexplored_moves
 
   def initialize(state:, parent:, move:)
     @parent = parent
     @state = state
     @move = move
-    @wins = 0.to_f
-    @visits = 1
+    @value = 0.to_f
+    @visits = 0
     @children = []
     @unexplored_moves = state.available_moves
     @leaf = state.terminal? || @unexplored_moves.empty?
@@ -15,11 +15,17 @@ class MTCS::Node
 
   SQRT_2 = 1.4142135623730951
   def utc_value
+    return Float::INFINITY unless @visits
     win_percentage + SQRT_2 * Math.sqrt(Math.log(parent.visits)/@visits)
   end
 
+  def ucb_value
+    return Float::INFINITY unless @visits
+    @value + 100 * Math.sqrt(Math.log(parent.visits)/@visits)
+  end
+
   def win_percentage
-    @wins / @visits
+    @value / @visits
   end
 
   def root?
@@ -32,6 +38,10 @@ class MTCS::Node
 
   def utc_select_child
     children.max_by &:utc_value
+  end
+
+  def ucb_select_child
+    children.max_by &:ucb_value
   end
 
   def expand
@@ -53,10 +63,6 @@ class MTCS::Node
     current_player = node.state.current_player
     node.update_stats(win: win) if win
     until node.root? do
-      if current_player != node.state.current_player
-        win = !win
-        current_player = node.state.current_player
-      end
       node = node.parent
       node.update_stats(win: win)
     end
@@ -68,7 +74,7 @@ class MTCS::Node
 
   def update_stats(win:)
     @visits += 1
-    @wins += 1 if win
+    @value += 1 if win
   end
 
 end
