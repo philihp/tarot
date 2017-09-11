@@ -61,7 +61,7 @@ class MTCS::Node
   def backpropagate(win:)
     node = self
     current_player = node.state.current_player
-    node.update_stats(win: win) if win
+    node.update_stats(win: win) # if win
     until node.root? do
       node = node.parent
       node.update_stats(win: win)
