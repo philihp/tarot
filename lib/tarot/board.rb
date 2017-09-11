@@ -31,6 +31,8 @@ class Tarot::Board
   def initialize(rand:, players:)
     @old_claims = clear_claim_array(players: players)
     @new_claims = clear_claim_array(players: players)
+    @new_display_tiles = []
+    @old_display_tiles = []
     imagine_future!(with: rand)
     @stacked_tiles = TILES.shuffle(random: rand).slice(0, 24)
     draw_tiles!
