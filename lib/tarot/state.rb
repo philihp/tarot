@@ -105,7 +105,6 @@ class Tarot::State
       tableaus: @tableaus.map(&:to_json),
       history: @history,
       options: available_moves,
-      _heuristic_score: Heuristic.new(state: self).score
     }
   end
 end
