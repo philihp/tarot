@@ -64,3 +64,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+## Thanks
+
+https://github.com/PragTob/rubykon

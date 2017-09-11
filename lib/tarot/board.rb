@@ -1,5 +1,11 @@
 class Tarot::Board
 
+  # Wheat   +++
+  # Village ++++++
+  # Forest  +++
+  # Lakes
+  # Gardens
+
   TILES = [
     { id: 1, l: { terrain: :wheat, crowns: 0 }, r: { terrain: :wheat, crowns: 0 } },
     { id: 2, l: { terrain: :wheat, crowns: 1 }, r: { terrain: :village, crowns: 0 } },
@@ -11,6 +17,7 @@ class Tarot::Board
     { id: 8, l: { terrain: :lakes, crowns: 0 }, r: { terrain: :lakes, crowns: 0 } },
     { id: 9, l: { terrain: :wheat, crowns: 1 }, r: { terrain: :forest, crowns: 0 } },
     { id: 10, l: { terrain: :wheat, crowns: 0 }, r: { terrain: :village, crowns: 1 } },
+    # { id: 10, l: { terrain: :wheat, crowns: 6 }, r: { terrain: :village, crowns: 1 } },
     { id: 11, l: { terrain: :forest, crowns: 0 }, r: { terrain: :forest, crowns: 0 } },
     { id: 12, l: { terrain: :lakes, crowns: 0 }, r: { terrain: :lakes, crowns: 0 } },
     { id: 13, l: { terrain: :wheat, crowns: 0 }, r: { terrain: :forest, crowns: 1 } },

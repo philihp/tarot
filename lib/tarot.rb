@@ -1,3 +1,9 @@
+# Turn on tail recursion optimization
+# RubyVM::InstructionSequence.compile_option = {
+#   tailcall_optimization: true,
+#   trace_instruction: false
+# }
+
 module Tarot
   require "tarot/version"
   require 'tarot/board'
@@ -7,6 +13,12 @@ module Tarot
   require 'tarot/command_claim'
   require 'tarot/command_commit'
   require 'tarot/command_place'
+end
+
+module MTCS
+  require 'mtcs/node.rb'
+  require 'mtcs/root.rb'
+  require 'mtcs/search.rb'
 end
 
 require 'json'

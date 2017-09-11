@@ -123,7 +123,9 @@ class Tarot::State
     available_moves.sample(random: Random.new)
   end
 
-  def suggested_move
-    available_moves[0]
+  def suggested_move(times: nil, milliseconds: 1000)
+    search = MTCS::Search.new(state: self)
+    search.explore(times: times, milliseconds: milliseconds)
+    search.root.best_move
   end
 end

@@ -8,8 +8,9 @@ require "tarot"
 
 # (If you use this, don't forget to add pry to your Gemfile!)
 require "pry"
+Pry.start
 
-state = Tarot::State.new
+# state = Tarot::State.new
 
 # command_set = Pry::CommandSet.new do
 #   command "restart" do |name|
@@ -21,7 +22,7 @@ state = Tarot::State.new
 #   print: proc { |o,v| ap @state.to_json },
 #   commands: command_set,
 # )
-pry
+# pry
 
 # require "irb"
 # IRB.start(__FILE__)
