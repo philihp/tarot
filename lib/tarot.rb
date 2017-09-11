@@ -3,7 +3,6 @@ module Tarot
   require 'tarot/board'
   require 'tarot/state'
   require 'tarot/tableau'
-  require 'tarot/heuristic'
   require 'tarot/command_base'
   require 'tarot/command_claim'
   require 'tarot/command_commit'

@@ -1,20 +1,19 @@
 class Tarot::Tableau
 
-  attr_accessor :rand
   attr_accessor :land
 
-  def initialize(rand:)
-    imagine_future!(with: rand)
+  def initialize
     @land = []
   end
 
-  def imagine_future!(with: Random.new)
-    @rand = with
+  def initialize_copy(source)
+    @land = source.land.dup
   end
 
   def to_json
     {
-      land: @land
+      land: @land,
+      score: score,
     }
   end
 
@@ -31,7 +30,13 @@ class Tarot::Tableau
       accum
     end
     property_scores = properties.map { |k,v| v[:size] * v[:crowns] }
-    property_scores.reduce(:+).to_i
+    property_score = property_scores.reduce(:+).to_i
+
+    largest_property = properties.map { |k,v| v[:size] }.max
+    total_crowns = properties.map { |k,v| v[:crowns] }.reduce(:+)
+
+    # This could be done lazily, we might not need the last two, but performance gains prob minimal
+    [ property_score, largest_property, total_crowns ]
   end
 
 end

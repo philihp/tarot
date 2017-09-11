@@ -33,10 +33,10 @@ class Tarot::State
   end
 
   def create_tableaus
-    @tableaus = Array.new(@players) { Tarot::Tableau.new(rand: @rand) }
+    @tableaus = Array.new(@players) { Tarot::Tableau.new }
   end
 
-  def play_move(move:, validate: true)
+  def play_move(move: , validate: true)
     raise InvalidMoveException unless validate && available_moves.include?(move)
 
     command = parse_move(string: move)
@@ -52,6 +52,11 @@ class Tarot::State
     end
 
     new_state
+  end
+
+  def random_walk
+    return self if terminal?
+    play_move(move: random_move).random_walk
   end
 
   def available_moves
@@ -73,6 +78,11 @@ class Tarot::State
 
   def terminal?
     waiting_for.nil? || available_moves.size == 0
+  end
+
+  def winner
+    return nil unless terminal?
+    @tableaus.each_index.max_by { |i| @tableaus[i].score }
   end
 
   def claim_moves
@@ -105,6 +115,15 @@ class Tarot::State
       tableaus: @tableaus.map(&:to_json),
       history: @history,
       options: available_moves,
+      current_player: @current_player,
     }
+  end
+
+  def random_move
+    available_moves.sample(random: Random.new)
+  end
+
+  def suggested_move
+    available_moves[0]
   end
 end
