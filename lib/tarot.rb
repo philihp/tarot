@@ -15,15 +15,16 @@ module Tarot
   require 'tarot/command_place'
 end
 
-module MTCS
-  require 'mtcs/node.rb'
-  require 'mtcs/root.rb'
-  require 'mtcs/search.rb'
+module MCTS
+  require 'mcts/node.rb'
+  require 'mcts/root.rb'
+  require 'mcts/search.rb'
 end
 
 require 'json'
 require 'pp'
 require 'ap'
+require 'ruby-progressbar'
 
 # game = Tarot::State.new
 # game = game.play_move(move: game.available_moves[0])
@@ -32,11 +33,12 @@ require 'ap'
 # game = game.play_move(move: game.available_moves[0])
 # pp game.to_json
 
-def play_game
+def play_game(bar:nil, time: 1000)
   state = Tarot::State.new
   while !state.terminal?
-    move = state.current_player == 0 ? state.suggested_move(milliseconds: 100) : state.random_move
+    move = state.current_player == 0 ? state.suggested_move(milliseconds: time) : state.random_move
     state = state.play_move(move: move)
   end
+  bar.increment unless bar.nil?
   state.winner
 end

@@ -1,4 +1,4 @@
-class MTCS::Node
+class MCTS::Node
 
   attr_reader :parent, :move, :value, :visits, :children, :state, :unexplored_moves
 
@@ -14,18 +14,16 @@ class MTCS::Node
   end
 
   SQRT_2 = 1.4142135623730951
-  def utc_value
-    return Float::INFINITY unless @visits
-    win_percentage + SQRT_2 * Math.sqrt(Math.log(parent.visits)/@visits)
+  def select_value
+    mean_value +
+      Math.sqrt(
+        Math.log(parent.visits + 1) /
+        (@visits + Float::EPSILON)
+      )
   end
 
-  def ucb_value
-    return Float::INFINITY unless @visits
-    @value + 100 * Math.sqrt(Math.log(parent.visits)/@visits)
-  end
-
-  def win_percentage
-    @value / @visits
+  def mean_value
+    @value / (@visits + Float::EPSILON)
   end
 
   def root?
@@ -36,18 +34,14 @@ class MTCS::Node
     @leaf
   end
 
-  def utc_select_child
-    children.max_by &:utc_value
-  end
-
-  def ucb_select_child
-    children.max_by &:ucb_value
+  def select_child
+    children.max_by &:select_value
   end
 
   def expand
     move = @unexplored_moves.pop
     state = @state.play_move(move: move)
-    child = MTCS::Node.new(state: state, move: move, parent: self)
+    child = MCTS::Node.new(state: state, move: move, parent: self)
     @children << child
     child
   end
@@ -60,9 +54,9 @@ class MTCS::Node
   # TODO simplify
   def backpropagate(win:)
     node = self
-    current_player = node.state.current_player
     node.update_stats(win: win) # if win
     until node.root? do
+      win = !win
       node = node.parent
       node.update_stats(win: win)
     end

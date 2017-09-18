@@ -1,9 +1,9 @@
-class MTCS::Search
+class MCTS::Search
 
   attr_reader :root
 
   def initialize(state:)
-    @root = MTCS::Root.new(state: state)
+    @root = MCTS::Root.new(state: state)
   end
 
   def explore(times: nil, milliseconds: nil)

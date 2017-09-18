@@ -126,7 +126,7 @@ class Tarot::State
   end
 
   def suggested_move(times: nil, milliseconds: 200)
-    search = MTCS::Search.new(state: self)
+    search = MCTS::Search.new(state: self)
     search.explore(times: times, milliseconds: milliseconds)
     search.root.best_move
   end

@@ -1,4 +1,4 @@
-class MTCS::Root < MTCS::Node
+class MCTS::Root < MCTS::Node
 
   def initialize(state:)
     super(state: state, move: nil, parent: nil)
@@ -33,7 +33,7 @@ private
     node = self
     until node.unexplored_moves? || node.leaf? do
       # policy of selection
-      node = node.ucb_select_child
+      node = node.select_child
     end
     node
   end
