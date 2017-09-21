@@ -33,12 +33,21 @@ require 'ruby-progressbar'
 # game = game.play_move(move: game.available_moves[0])
 # pp game.to_json
 
-def play_game(bar:nil, time: 1000)
+def play_game(timelimit: 1000)
   state = Tarot::State.new
   while !state.terminal?
-    move = state.current_player == 0 ? state.suggested_move(milliseconds: time) : state.random_move
+    move = state.current_player == 0 ? state.suggested_move(milliseconds: timelimit) : state.random_move
     state = state.play_move(move: move)
   end
-  bar.increment unless bar.nil?
   state.winner
+end
+
+def simulate(times:, timelimit:)
+  bar = ProgressBar.create(total: times)
+  record = (1..times).map do
+    bar.increment
+    play_game(timelimit: timelimit) == 0 ? 1 : 0
+  end
+  wins = record.reduce(:+)
+  puts "Win/Loss: #{wins} / #{times} ... #{wins/times.to_f}"
 end
