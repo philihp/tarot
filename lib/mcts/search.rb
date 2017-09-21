@@ -9,7 +9,7 @@ class MCTS::Search
   def explore(times: nil, milliseconds: nil)
     if times
       times.times do
-        @root.state.board.stacked_tiles.shuffle
+        @root.state.shuffle
         @root.explore
       end
     elsif milliseconds

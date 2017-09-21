@@ -1,4 +1,4 @@
-class Tarot::State
+class Tarot::State < MCTS::State
 
   class InvalidMoveException < Exception
   end
@@ -26,6 +26,10 @@ class Tarot::State
     @board = source.board.dup
     @tableaus = source.tableaus.map(&:dup)
     @history = source.history.dup
+  end
+
+  def shuffle
+    board.stacked_tiles.shuffle
   end
 
   def create_board
@@ -58,11 +62,6 @@ class Tarot::State
     state = self.dup
     state.rand = Random.new
     recurse_random_walk(depth: depth)
-  end
-
-  def recurse_random_walk(depth:)
-    return self if terminal? || depth == 0
-    play_move(move: random_move).recurse_random_walk(depth: depth - 1)
   end
 
   def available_moves
@@ -125,13 +124,18 @@ class Tarot::State
     }
   end
 
-  def random_move
-    available_moves.sample(random: Random.new)
-  end
-
   def suggested_move(times: nil, milliseconds: 200)
     search = MCTS::Search.new(state: self)
     search.explore(times: times, milliseconds: milliseconds)
     search.root.best_move
+  end
+
+  def recurse_random_walk(depth:)
+    return self if terminal? || depth == 0
+    play_move(move: random_move).recurse_random_walk(depth: depth - 1)
+  end
+
+  def random_move
+    available_moves.sample(random: Random.new)
   end
 end

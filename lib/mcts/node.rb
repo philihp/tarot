@@ -52,14 +52,11 @@ class MCTS::Node
   end
 
   def backpropagate(winner:)
-    update_stats(winner: winner)
-    parent.backpropagate(winner: winner) unless parent.nil?
-    # node = self
-    # node.update_stats(winner: winner) # if win
-    # until node.root? do
-    #   node = node.parent
-    #   node.update_stats(winner: winner)
-    # end
+    node = self
+    node.update_stats(winner: winner) until (node = node.parent).nil?
+    # alternative: tail recursion?
+    # update_stats(winner: winner)
+    # parent.backpropagate(winner: winner) unless parent.nil?
   end
 
   def unexplored_moves?

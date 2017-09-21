@@ -55,12 +55,12 @@ class Tarot::Board
   attr_accessor :old_claims, :new_claims
   attr_accessor :stacked_tiles, :new_display_tiles, :old_display_tiles
 
-  def initialize(rand:, players:)
+  def initialize(rand: Random.new, players:)
     @old_claims = clear_claim_array(players: players)
     @new_claims = clear_claim_array(players: players)
     @new_display_tiles = []
     @old_display_tiles = []
-    imagine_future!(with: rand)
+    @rand = rand
     @stacked_tiles = TILES.shuffle(random: rand).slice(0, 24)
     draw_tiles!
   end
@@ -72,10 +72,6 @@ class Tarot::Board
     @stacked_tiles = source.stacked_tiles.dup
     @new_display_tiles = source.new_display_tiles.dup
     @old_display_tiles = source.old_display_tiles.dup unless source.old_display_tiles.nil?
-  end
-
-  def imagine_future!(with: Random.new)
-    @rand = with
   end
 
   def draw_tiles!

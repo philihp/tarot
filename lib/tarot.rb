@@ -4,6 +4,13 @@
 #   trace_instruction: false
 # }
 
+module MCTS
+  require 'mcts/node.rb'
+  require 'mcts/root.rb'
+  require 'mcts/search.rb'
+  require 'mcts/state.rb'
+end
+
 module Tarot
   require "tarot/version"
   require 'tarot/board'
@@ -13,12 +20,6 @@ module Tarot
   require 'tarot/command_claim'
   require 'tarot/command_commit'
   require 'tarot/command_place'
-end
-
-module MCTS
-  require 'mcts/node.rb'
-  require 'mcts/root.rb'
-  require 'mcts/search.rb'
 end
 
 require 'json'
