@@ -39,7 +39,7 @@ def play_game(timelimit: 1000)
     move = state.current_player == 0 ? state.suggested_move(milliseconds: timelimit) : state.random_move
     state = state.play_move(move: move)
   end
-  state.winner
+  state.winning_player
 end
 
 def simulate(times:, timelimit:)

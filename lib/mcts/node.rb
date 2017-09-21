@@ -48,7 +48,7 @@ class MCTS::Node
 
   def simulate
     state = @state.random_walk
-    state.winner
+    state.winning_player
   end
 
   def backpropagate(winner:)

@@ -54,11 +54,15 @@ class Tarot::State
     new_state
   end
 
-  def random_walk
-    return self if terminal?
+  def random_walk(depth: 5)
     state = self.dup
     state.rand = Random.new
-    state.play_move(move: random_move).random_walk
+    recurse_random_walk(depth: depth)
+  end
+
+  def recurse_random_walk(depth:)
+    return self if terminal? || depth == 0
+    play_move(move: random_move).recurse_random_walk(depth: depth - 1)
   end
 
   def available_moves
@@ -82,7 +86,7 @@ class Tarot::State
     waiting_for.nil? || available_moves.size == 0
   end
 
-  def winner
+  def winning_player
     return nil unless terminal?
     @tableaus.each_index.max_by { |i| @tableaus[i].score }
   end
