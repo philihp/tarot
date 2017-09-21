@@ -48,27 +48,33 @@ class MCTS::Node
 
   def simulate
     state = @state.random_walk
-    state.winner == @state.current_player
+    state.winner
   end
 
-  # TODO simplify
-  def backpropagate(win:)
-    node = self
-    node.update_stats(win: win) # if win
-    until node.root? do
-      win = !win
-      node = node.parent
-      node.update_stats(win: win)
-    end
+  def backpropagate(winner:)
+    update_stats(winner: winner)
+    parent.backpropagate(winner: winner) unless parent.nil?
+    # node = self
+    # node.update_stats(winner: winner) # if win
+    # until node.root? do
+    #   node = node.parent
+    #   node.update_stats(winner: winner)
+    # end
   end
 
   def unexplored_moves?
     !@unexplored_moves.empty?
   end
 
-  def update_stats(win:)
+  def update_stats(winner:)
     @visits += 1
-    @value += 1 if win
+    @value += 1 if winner == acting_player
+  end
+
+  # The player who took the move to get to this state
+  def acting_player
+    return parent.state.current_player unless parent.nil?
+    -1
   end
 
 end
