@@ -98,7 +98,7 @@ class Tarot::State < MCTS::State
   end
 
   def place_moves
-    [ 'place 0 0 h' ]
+    [ 'place 0 0 h', 'place -1 1 v' ]
   end
 
   def parse_move(string:)

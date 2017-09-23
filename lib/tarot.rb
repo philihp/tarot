@@ -27,13 +27,6 @@ require 'pp'
 require 'ap'
 require 'ruby-progressbar'
 
-# game = Tarot::State.new
-# game = game.play_move(move: game.available_moves[0])
-# game = game.play_move(move: game.available_moves[0])
-# game = game.play_move(move: game.available_moves[0])
-# game = game.play_move(move: game.available_moves[0])
-# pp game.to_json
-
 def play_game(timelimit: 1000)
   state = Tarot::State.new
   while !state.terminal?
@@ -51,4 +44,12 @@ def rollout(times:, timelimit:)
   end
   wins = record.reduce(:+)
   puts "Win/Loss: #{wins} / #{times} ... #{wins/times.to_f}"
+end
+
+def place_state
+  state = Tarot::State.new
+  state = state.play_move(move: state.suggested_move(milliseconds: 10))
+  state = state.play_move(move: state.suggested_move(milliseconds: 10))
+  state = state.play_move(move: state.suggested_move(milliseconds: 10))
+  state = state.play_move(move: state.suggested_move(milliseconds: 10))
 end
