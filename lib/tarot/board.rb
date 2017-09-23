@@ -88,6 +88,18 @@ class Tarot::Board
     @old_claims.find_index { |n| !n.nil? }
   end
 
+  def claim_index
+    @old_display_tiles.find_index(&:itself)
+  end
+
+  def placing_tile
+    @old_display_tiles[claim_index]
+  end
+
+  def placing_tile=(value)
+    @old_display_tiles[claim_index] = value
+  end
+
   def to_json
     {
       old_claims: @old_claims,

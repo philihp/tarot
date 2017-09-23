@@ -17,13 +17,11 @@ class Tarot::CommandPlace < Tarot::CommandBase
 
   def execute(state:)
     state = state.dup
-    claim_index = state.board.old_display_tiles.find_index(&:itself)
+    claim_index = state.board.claim_index
 
     # TODO: place it acutually on a board, rather than just an array
-    placing_tile = state.board.old_display_tiles[claim_index]
-    state.board.old_display_tiles[claim_index] = nil
-
-    state.tableaus[state.current_player].land << placing_tile
+    state.current_tableau.land << state.board.placing_tile
+    state.board.placing_tile = nil
 
       # only relevant in last round when places dont preceed claim
     state.board.old_claims[claim_index] = nil

@@ -40,6 +40,10 @@ class Tarot::State < MCTS::State
     @tableaus = Array.new(@players) { Tarot::Tableau.new }
   end
 
+  def current_tableau
+    @tableaus[current_player]
+  end
+
   def play_move(move: , validate: true)
     raise InvalidMoveException unless validate && available_moves.include?(move)
 
@@ -98,6 +102,9 @@ class Tarot::State < MCTS::State
   end
 
   def place_moves
+    tile = @board.placing_tile
+    tableau = current_tableau
+
     [ 'place 0 0 h', 'place -1 1 v' ]
   end
 
