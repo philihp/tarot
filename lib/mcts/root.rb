@@ -22,7 +22,7 @@ class MCTS::Root < MCTS::Node
     # Expansion
     node = node.expand unless node.leaf?
     # Simulation
-    winner = node.simulate
+    winner = node.rollout
     # Backpropagation
     node.backpropagate(winner: winner)
   end

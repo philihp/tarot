@@ -46,7 +46,7 @@ class MCTS::Node
     child
   end
 
-  def simulate
+  def rollout
     state = @state.random_walk
     state.winning_player
   end

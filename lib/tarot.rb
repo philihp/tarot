@@ -43,7 +43,7 @@ def play_game(timelimit: 1000)
   state.winning_player
 end
 
-def simulate(times:, timelimit:)
+def rollout(times:, timelimit:)
   bar = ProgressBar.create(total: times)
   record = (1..times).map do
     bar.increment

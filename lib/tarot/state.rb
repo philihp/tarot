@@ -58,7 +58,7 @@ class Tarot::State < MCTS::State
     new_state
   end
 
-  def random_walk(depth: 5)
+  def random_walk(depth: 9999)
     state = self.dup
     state.rand = Random.new
     recurse_random_walk(depth: depth)
