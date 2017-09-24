@@ -67,6 +67,7 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 ## Thanks
 
-https://github.com/PragTob/rubykon
-https://github.com/dbravender/tilerealm
+* https://github.com/PragTob/rubykon - for his ruby implementation of MCTS, of which this was derived. 
+
+* https://github.com/dbravender/tilerealm - for his python implementation of the game. It turns out enumerating possible places to drop a tile is hard.
 
