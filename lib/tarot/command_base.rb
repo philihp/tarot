@@ -7,7 +7,8 @@ class Tarot::CommandBase
   end
 
   def execute(state:)
-    raise NotImplementedError
+    state.history << @command
+    state.freeze
   end
 
   def unexecute(state:)

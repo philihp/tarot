@@ -36,8 +36,7 @@ class Tarot::CommandCommit < Tarot::CommandBase
     else
       raise InvalidMoveException
     end
-    state.history << @command
-    state.freeze
+    super
   end
 
   def start_new_round(state:)

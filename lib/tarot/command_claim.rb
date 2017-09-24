@@ -25,8 +25,7 @@ class Tarot::CommandClaim < Tarot::CommandBase
     else
       raise InvalidMoveException
     end
-    state.history << @command
-    state.freeze
+    super
   end
 
 end
