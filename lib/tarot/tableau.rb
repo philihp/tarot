@@ -5,10 +5,6 @@ class Tarot::Tableau
   def initialize
     @land = Array.new(Tarot::MAX_SIZE * 2 - 1){Array.new(Tarot::MAX_SIZE * 2 - 1)}
     @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 1] = { terrain: Tarot::CASTLE_TYPE, crowns: 0 }
-    # @land[Tarot::MAX_SIZE - 2][Tarot::MAX_SIZE - 1] = { terrain: :w, crowns: 0 }
-    # @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 2] = { terrain: :f, crowns: 0 }
-    # @land[Tarot::MAX_SIZE - 0][Tarot::MAX_SIZE - 1] = { terrain: :p, crowns: 0 }
-    # @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 0] = { terrain: :d, crowns: 0 }
   end
 
   def initialize_copy(source)
@@ -98,7 +94,7 @@ class Tarot::Tableau
     # verticals
     placement_iterator(x_bound: 0, y_bound: -1) do |x, y|
       # No previous tile at this spot, or below
-      next unless self[x,y].nil? && self[x + 1, y].nil?
+      next unless self[x,y].nil? && self[x, y + 1].nil?
       # This spot, or the one below matches some adjacent terrain
       next unless adjacent_tiles_match(x, y, current_tile[:l]) ||
         adjacent_tiles_match(x, y + 1, current_tile[:r])

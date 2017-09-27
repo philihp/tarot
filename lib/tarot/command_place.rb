@@ -12,7 +12,7 @@ class Tarot::CommandPlace < Tarot::CommandBase
     @y = tokens[2].to_i
     raise InvalidMoveException unless (0..8).cover?(@y)
     @orientation = tokens[3].to_sym
-    raise InvalidMoveException unless [:h, :w].include?(@orientation)
+    raise InvalidMoveException unless [:h, :v].include?(@orientation)
   end
 
   def execute(state:)
@@ -36,10 +36,10 @@ class Tarot::CommandPlace < Tarot::CommandBase
   end
 
   def x2
-    x + Tarot::CARDINAL_MODIFIER[orientation][0]
+    x + (orientation == :h ? 1 : 0)
   end
 
   def y2
-    y + Tarot::CARDINAL_MODIFIER[orientation][1]
+    y + (orientation == :v ? 1 : 0)
   end
 end

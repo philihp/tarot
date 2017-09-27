@@ -29,6 +29,7 @@ module Tarot
   require 'tarot/command_claim'
   require 'tarot/command_commit'
   require 'tarot/command_place'
+  require 'tarot/command_trash'
 end
 
 require 'json'
@@ -60,9 +61,9 @@ def place_state
   state = state.play_move(move: state.available_moves[0])
   state = state.play_move(move: state.available_moves[0])
   state = state.play_move(move: state.available_moves[0])
-  # state = state.play_move(move: state.available_moves[0])
-  # state = state.play_move(move: state.available_moves[3])
-  # state = state.play_move(move: state.available_moves[1])
-  # state = state.play_move(move: state.available_moves[2])
-  # state = state.play_move(move: state.available_moves[1])
+  state = state.play_move(move: state.available_moves[0])
+  state = state.play_move(move: state.available_moves[0])
+  state = state.play_move(move: state.available_moves[0])
+  state = state.play_move(move: state.available_moves[0])
+  state = state.play_move(move: state.available_moves[0])
 end

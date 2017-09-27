@@ -102,7 +102,7 @@ class Tarot::State < MCTS::State
   end
 
   def place_moves
-    moves = current_tableau.get_possible_places(@board.placing_tile).map do |x,y,orientation|
+    moves = current_tableau.get_possible_places(@board.placing_tile) do |x,y,orientation|
       "place #{x} #{y} #{orientation}"
     end
     moves.empty? ? ['trash'] : moves
@@ -116,6 +116,8 @@ class Tarot::State < MCTS::State
       Tarot::CommandCommit.new(command: string)
     when string.start_with?('place')
       Tarot::CommandPlace.new(command: string)
+    when string.start_with?('trash')
+      Tarot::CommandTrash.new(command: string)
     else
       raise InvalidMoveException, "\"#{string}\""
     end
