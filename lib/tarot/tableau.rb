@@ -8,7 +8,7 @@ class Tarot::Tableau
   end
 
   def initialize_copy(source)
-    @land = source.land.dup
+    @land = source.land.map(&:dup)
   end
 
   def to_json
