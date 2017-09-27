@@ -4,7 +4,11 @@ class Tarot::Tableau
 
   def initialize
     @land = Array.new(Tarot::MAX_SIZE * 2 - 1){Array.new(Tarot::MAX_SIZE * 2 - 1)}
-    @land[Tarot::MAX_SIZE][Tarot::MAX_SIZE] = { terrain: Tarot::CASTLE_TYPE, crowns: 0 }
+    @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 1] = { terrain: Tarot::CASTLE_TYPE, crowns: 0 }
+    @land[Tarot::MAX_SIZE - 2][Tarot::MAX_SIZE - 1] = { terrain: :w, crowns: 0 }
+    @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 2] = { terrain: :f, crowns: 0 }
+    @land[Tarot::MAX_SIZE - 0][Tarot::MAX_SIZE - 1] = { terrain: :p, crowns: 0 }
+    @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 0] = { terrain: :d, crowns: 0 }
   end
 
   def initialize_copy(source)
@@ -126,4 +130,9 @@ class Tarot::Tableau
     moves
   end
 
+  def to_s
+    grid = [['.'] + (0..9).to_a.map(&:to_s)] +
+      land.map.with_index { |r, i| [i.to_s] + r.map { |c| c.nil? ? ' ' : c[:terrain].to_s } }
+    grid.map { |r| r.join(' ') }.join("\n")
+  end
 end

@@ -102,9 +102,10 @@ class Tarot::State < MCTS::State
   end
 
   def place_moves
-    current_tableau.get_possible_places(@board.placing_tile).map do |y,x,orientation|
+    moves = current_tableau.get_possible_places(@board.placing_tile).map do |y,x,orientation|
       "place #{x} #{y} #{orientation}"
-    end + [ 'trash' ]
+    end
+    moves.empty? ? ['trash'] : moves
   end
 
   def parse_move(string:)
