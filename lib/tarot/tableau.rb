@@ -5,10 +5,10 @@ class Tarot::Tableau
   def initialize
     @land = Array.new(Tarot::MAX_SIZE * 2 - 1){Array.new(Tarot::MAX_SIZE * 2 - 1)}
     @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 1] = { terrain: Tarot::CASTLE_TYPE, crowns: 0 }
-    @land[Tarot::MAX_SIZE - 2][Tarot::MAX_SIZE - 1] = { terrain: :w, crowns: 0 }
-    @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 2] = { terrain: :f, crowns: 0 }
-    @land[Tarot::MAX_SIZE - 0][Tarot::MAX_SIZE - 1] = { terrain: :p, crowns: 0 }
-    @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 0] = { terrain: :d, crowns: 0 }
+    # @land[Tarot::MAX_SIZE - 2][Tarot::MAX_SIZE - 1] = { terrain: :w, crowns: 0 }
+    # @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 2] = { terrain: :f, crowns: 0 }
+    # @land[Tarot::MAX_SIZE - 0][Tarot::MAX_SIZE - 1] = { terrain: :p, crowns: 0 }
+    # @land[Tarot::MAX_SIZE - 1][Tarot::MAX_SIZE - 0] = { terrain: :d, crowns: 0 }
   end
 
   def initialize_copy(source)
@@ -49,84 +49,62 @@ class Tarot::Tableau
   def realm_iterator
     (0..Tarot::MAX_SIZE * 2 - 2).map do |x|
       (0..Tarot::MAX_SIZE * 2 - 2).map do |y|
-        yield x, y, @land[y][x]
+        yield x, y, self[x, y]
       end
     end
   end
 
-  def adjacent_iterator(x, y, check, &block)
-    Tarot::CARDINAL_MODIFIER.map do |orientation, offset|
-      (y_offset, x_offset) = offset
-      x_new = x_offset + x
-      y_new = y_offset + y
-      next if x_new < 0 || x_new >= Tarot::MAX_SIZE * 2 - 1
-      next if y_new < 0 || y_new >= Tarot::MAX_SIZE * 2 - 1
-      tile = @land[y_new][x_new]
-      next unless check.call(x_new, y_new, tile)
-      yield x_new, y_new, tile, orientation
+  def placement_iterator(x_bound:, y_bound:)
+    x_min = y_min = x_max = y_max = Tarot::MAX_SIZE - 1
+    realm_iterator do |x, y, tile|
+      unless tile.nil?
+        (x_min, x_max) = [x_min, x, x_max].minmax
+        (y_min, y_max) = [y_min, y, y_max].minmax
+      end
+    end
+    ((y_max - (Tarot::MAX_SIZE - 1))..(y_min + (Tarot::MAX_SIZE - 1) + y_bound)).map do |y|
+      ((x_max - (Tarot::MAX_SIZE - 1))..(x_min + (Tarot::MAX_SIZE - 1) + x_bound)).map do |x|
+        yield x, y
+      end
     end
   end
 
-  def empty_adjacent(x, y, &block)
-    adjacent_iterator(x, y, ->(_, _, ntile){ ntile.nil? }) do |mx, my, mtile, morientation|
-      yield mx, my, mtile, morientation
-    end
+  def adjacent_tiles(x, y)
+    Tarot::CARDINAL_MODIFIER.map do |offset|
+      (dx, dy) = offset
+      self[x + dx, y + dy]
+    end.compact
   end
 
-  def flipped_tile(tile)
-    {
-      id: tile[:id],
-      l: tile[:r],
-      r: tile[:l],
-      flipped: true,
-    }
+  def adjacent_tiles_match(x, y, tile)
+    adjacent_tiles(x, y).any? do |t|
+      [tile[:terrain], Tarot::CASTLE_TYPE].include? t[:terrain]
+    end
   end
 
   def get_possible_places(current_tile)
+
     moves = []
-    x_min = Float::INFINITY
-    x_max = 0
-    y_min = Float::INFINITY
-    y_max = 0
-    realm_iterator do |x, y, tile|
-      unless tile.nil?
-        (x_min, x_max) = [x_min, x].minmax
-        (y_min, y_max) = [y_min, y].minmax
-      end
+
+    # horizontals
+    placement_iterator(x_bound: -1, y_bound: 0) do |x, y|
+      # Has previous tile at this spot, and to the right
+      next unless self[x,y].nil? && self[x + 1, y].nil?
+      # This spot, or the one to the right matches some adjacent terrain
+      next unless adjacent_tiles_match(x, y, current_tile[:l]) ||
+        adjacent_tiles_match(x + 1, y, current_tile[:r])
+      moves << yield(x, y, :h)
+    end +
+    # verticals
+    placement_iterator(x_bound: 0, y_bound: -1) do |x, y|
+      # No previous tile at this spot, or below
+      next unless self[x,y].nil? && self[x + 1, y].nil?
+      # This spot, or the one below matches some adjacent terrain
+      next unless adjacent_tiles_match(x, y, current_tile[:l]) ||
+        adjacent_tiles_match(x, y + 1, current_tile[:r])
+      moves << yield(x, y, :v)
     end
 
-    # pseudocode:
-
-    # for the current tile, or the flipped current tile
-    #   give me all of the tiles on my board that terrain or castle
-    #     give me all the orientations that the tile can go
-    #       for each of these, does it keep the bound within 5x5?
-
-    [current_tile, flipped_tile(current_tile)].each do |proposed_tile|
-      current_piece = proposed_tile[:l]
-      second_piece = proposed_tile[:r]
-      current_type = current_piece[:terrain]
-      realm_iterator do |x, y, tile|
-        # make sure this piece is either the castle or of the same type
-        if !tile.nil? && [current_type, Tarot::CASTLE_TYPE].include?(tile[:terrain])
-          # find all empty spots next to this piece
-          empty_adjacent(x, y) do |nx, ny, _|
-            # ensure there are other spots for the next piece in the tile
-            #to_enum(:empty_adjacent, nx, ny)
-            empty_adjacent(nx, ny) do |mx, my, _, orientation|
-              if proposed_tile.key?(:flipped)
-                moves << [mx, my, Tarot::CARDINAL_INVERSE[orientation]]
-              else
-                moves << [nx, ny, orientation]
-              end
-            end
-          end
-        end
-      end
-    end
-
-    # TODO: once this works, and we have test cases... make it functional. appending to an array
-    #       isn't really that nice and functional.
     moves
   end
 
@@ -135,4 +113,14 @@ class Tarot::Tableau
       land.map.with_index { |r, i| [i.to_s] + r.map { |c| c.nil? ? ' ' : c[:terrain].to_s } }
     grid.map { |r| r.join(' ') }.join("\n")
   end
+
+  # This makes it easy to grab cells from the array without worrying about something
+  # like @land[-1][4] or @land[4,-1] or @land[0][9] going out of bounds. If we go out of
+  # bounds, just give back a cell that looks like an empty cell.
+  def [](x, y)
+    return nil unless x.between?(0, Tarot::MAX_SIZE * 2 - 2)
+    return nil unless y.between?(0, Tarot::MAX_SIZE * 2 - 2)
+    @land[y][x]
+  end
+
 end

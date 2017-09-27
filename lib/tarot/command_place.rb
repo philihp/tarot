@@ -12,7 +12,7 @@ class Tarot::CommandPlace < Tarot::CommandBase
     @y = tokens[2].to_i
     raise InvalidMoveException unless (0..8).cover?(@y)
     @orientation = tokens[3].to_sym
-    raise InvalidMoveException unless [:n, :s, :e, :w].include?(@orientation)
+    raise InvalidMoveException unless [:h, :w].include?(@orientation)
   end
 
   def execute(state:)

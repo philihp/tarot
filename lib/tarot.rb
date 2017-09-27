@@ -14,18 +14,12 @@ end
 module Tarot
   MAX_SIZE = 5
   CASTLE_TYPE = :x
-  CARDINAL_MODIFIER = {
-    w: [-1, 0],
-    e: [1, 0],
-    n: [0, -1],
-    s: [0, 1],
-  }
-  CARDINAL_INVERSE = {
-    w: :e,
-    e: :w,
-    n: :s,
-    s: :n,
-  }
+  CARDINAL_MODIFIER = [
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
+  ]
 
   require "tarot/version"
   require 'tarot/board'
@@ -66,9 +60,9 @@ def place_state
   state = state.play_move(move: state.available_moves[0])
   state = state.play_move(move: state.available_moves[0])
   state = state.play_move(move: state.available_moves[0])
-  state = state.play_move(move: state.available_moves[0])
-  state = state.play_move(move: state.available_moves[3])
-  state = state.play_move(move: state.available_moves[1])
-  state = state.play_move(move: state.available_moves[2])
-  state = state.play_move(move: state.available_moves[1])
+  # state = state.play_move(move: state.available_moves[0])
+  # state = state.play_move(move: state.available_moves[3])
+  # state = state.play_move(move: state.available_moves[1])
+  # state = state.play_move(move: state.available_moves[2])
+  # state = state.play_move(move: state.available_moves[1])
 end
