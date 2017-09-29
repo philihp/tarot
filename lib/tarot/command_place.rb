@@ -22,7 +22,6 @@ class Tarot::CommandPlace < Tarot::CommandBase
     tile = state.board.placing_tile
 
     # TODO prevent invalid move placement
-
     state.current_tableau.land[y][x] = tile[:l]
     state.current_tableau.land[y2][x2] = tile[:r]
     # we lose the ID of the tile here, but it's not really important anymore.
@@ -32,7 +31,7 @@ class Tarot::CommandPlace < Tarot::CommandBase
     state.board.old_claims[claim_index] = nil
 
     state.waiting_for = :commit
-    super
+    super(state: state)
   end
 
   def x2

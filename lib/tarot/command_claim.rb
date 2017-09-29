@@ -25,7 +25,7 @@ class Tarot::CommandClaim < Tarot::CommandBase
     else
       raise InvalidMoveException
     end
-    super
+    super(state: state)
   end
 
 end

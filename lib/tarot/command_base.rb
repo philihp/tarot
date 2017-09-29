@@ -8,6 +8,11 @@ class Tarot::CommandBase
 
   def execute(state:)
     state.history << @command
+
+    # do this after the subclass command mutates the new board state, because
+    # available_moves won't be memoizable after freeze.
+    state.available_moves
+
     state.freeze
   end
 

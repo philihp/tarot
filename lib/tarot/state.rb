@@ -26,6 +26,7 @@ class Tarot::State < MCTS::State
     @board = source.board.dup
     @tableaus = source.tableaus.map(&:dup)
     @history = source.history.dup
+    @available_moves = nil # dont carry this over when a Command .dup's the state
   end
 
   def shuffle
@@ -50,16 +51,13 @@ class Tarot::State < MCTS::State
     command = parse_move(string: move)
     # IMPORTANT
     # play_move returns the new state that the command returns, because states should be immutable
-    new_state = command.execute(state: self)
+    state = command.execute(state: self)
 
-    # Undecided if this is a good or a bad thing. If there's only one move,
-    # force the player to take it. Seems cool.
-    while new_state.available_moves.size == 1
-    # while new_state.waiting_for == :commit
-      new_state = new_state.play_move(move: new_state.available_moves[0])
-    end
+    # Usually this just `commit`s when that's the only thing left to do, however it will also
+    # claim the last tile when there's no choice, or trash it or place it in the last spot.
+    state = state.play_move(move: state.available_moves[0]) if state.available_moves.size == 1
 
-    new_state
+    state
   end
 
   def random_walk(depth: 9999)
@@ -69,15 +67,17 @@ class Tarot::State < MCTS::State
   end
 
   def available_moves
-    case @waiting_for
-    when :init_claim, :claim
-      claim_moves
-    when :init_commit, :commit
-      [ 'commit' ]
-    when :place
-      place_moves
-    else
-      []
+    @available_moves ||= begin
+      case @waiting_for
+      when :init_claim, :claim
+        claim_moves
+      when :init_commit, :commit
+        [ 'commit' ]
+      when :place
+        place_moves
+      else
+        []
+      end
     end
   end
 

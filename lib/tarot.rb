@@ -62,8 +62,8 @@ def place_state
   state = state.play_move(move: state.available_moves[0])
   state = state.play_move(move: state.available_moves[0])
   state = state.play_move(move: state.available_moves[0])
-  state = state.play_move(move: state.available_moves[0])
-  state = state.play_move(move: state.available_moves[0])
-  state = state.play_move(move: state.available_moves[0])
-  state = state.play_move(move: state.available_moves[0])
+  # state = state.play_move(move: state.available_moves[0])
+  # state = state.play_move(move: state.available_moves[0])
+  # state = state.play_move(move: state.available_moves[0])
+  # state = state.play_move(move: state.available_moves[0])
 end

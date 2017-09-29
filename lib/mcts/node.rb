@@ -9,7 +9,7 @@ class MCTS::Node
     @value = 0.to_f
     @visits = 0
     @children = []
-    @unexplored_moves = state.available_moves
+    @unexplored_moves = state.available_moves.dup # mutate our own copy during expand, not state's
     @leaf = state.terminal? || @unexplored_moves.empty?
   end
 
