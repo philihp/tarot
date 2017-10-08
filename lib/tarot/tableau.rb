@@ -83,30 +83,22 @@ class Tarot::Tableau
     # Also, if the kingom is skinny (1, 2, or 3 width), then search 2 off the edge in that dir,
     # rather than just the bordering tile of the map edge.
     case dir
-    when :n
-      if y_size <= Tarot::MAX_SIZE - 2
-        y_max_range -= 1
-      else
-        y_min_range += 1
-      end
-    when :s
-      if y_size <= Tarot::MAX_SIZE - 2
-        y_min_range += 1
-      else
-        y_max_range -= 1
-      end
-    when :w
-      if x_size <= Tarot::MAX_SIZE - 2
-        x_max_range -= 1
-      else
-        x_min_range += 1
-      end
-    when :e
-      if x_size <= Tarot::MAX_SIZE - 2
-        x_min_range += 1
-      else
-        x_max_range -= 1
-      end
+    when :n && y_size <= Tarot::MAX_SIZE - 2
+      y_max_range -= 1
+    when :n # && tall
+      y_min_range += 1
+    when :s && y_size <= Tarot::MAX_SIZE - 2
+      y_min_range += 1
+    when :s # && tall
+      y_max_range -= 1
+    when :w && x_size <= Tarot::MAX_SIZE - 2
+      x_max_range -= 1
+    when :w # && wide
+      x_min_range += 1
+    when :e && x_size <= Tarot::MAX_SIZE - 2
+      x_min_range += 1
+    when :e # && wide
+      x_max_range -= 1
     end
 
     # binding.pry unless (0..8).cover?(y_min_range) && (0..8).cover?(y_max_range) &&
