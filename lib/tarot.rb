@@ -14,12 +14,12 @@ end
 module Tarot
   MAX_SIZE = 5
   CASTLE_TYPE = :x
-  CARDINAL_MODIFIER = [
-    [-1, 0],
-    [1, 0],
-    [0, -1],
-    [0, 1],
-  ]
+  CARDINAL_MODIFIER = {
+    w: [-1, 0],
+    e: [1, 0],
+    n: [0, -1],
+    s: [0, 1],
+  }
 
   require "tarot/version"
   require 'tarot/board'

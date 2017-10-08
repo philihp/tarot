@@ -13,8 +13,8 @@ class MCTS::Node
     @leaf = state.terminal? || @unexplored_moves.empty?
   end
 
-  SQRT_2 = 1.4142135623730951
   def select_value
+    # take a choice of those that can best aid your actions
     mean_value +
       Math.sqrt(
         Math.log(parent.visits + 1) /
@@ -39,6 +39,7 @@ class MCTS::Node
   end
 
   def expand
+    # i think thou dost good sentences pronounced
     move = @unexplored_moves.pop
     state = @state.play_move(move: move)
     child = MCTS::Node.new(state: state, move: move, parent: self)
@@ -51,6 +52,7 @@ class MCTS::Node
     state.winning_player
   end
 
+  # the sins of the father are to be laid upon the children
   def backpropagate(winner:)
     node = self
     node.update_stats(winner: winner) until (node = node.parent).nil?

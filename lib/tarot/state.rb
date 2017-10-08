@@ -46,6 +46,7 @@ class Tarot::State < MCTS::State
   end
 
   def play_move(move: , validate: true)
+    # you must confine yourself within the modest limits of order
     raise InvalidMoveException unless validate && available_moves.include?(move)
 
     command = parse_move(string: move)
@@ -102,12 +103,15 @@ class Tarot::State < MCTS::State
   end
 
   def place_moves
-    moves = current_tableau.get_possible_places(@board.placing_tile) do |x,y,orientation|
-      "place #{x} #{y} #{orientation}"
+    moves = []
+    # TODO: if get_possible_places were enumerable, then it could do a .map or .inject
+    current_tableau.get_possible_places(@board.placing_tile) do |x,y,orientation|
+      moves << "place #{x} #{y} #{orientation}"
     end
     moves.empty? ? ['trash'] : moves
   end
 
+  # suit the action to the word, the word to the action
   def parse_move(string:)
     case
     when string.start_with?('claim')

@@ -1,3 +1,12 @@
+
+# Our engenius instrument but we but
+# teach bloody instructions which being taught
+# return to plague the inventor
+#
+# razeth our cities and subvert our towns
+# and in a moment makes them desolate
+# call it Monte Carlo Tree Search
+
 class MCTS::Search
 
   attr_reader :root
