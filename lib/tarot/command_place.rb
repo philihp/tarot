@@ -26,12 +26,7 @@ class Tarot::CommandPlace < Tarot::CommandBase
     state.current_tableau.land[y][x] = tile[:l]
     (offset_x, offset_y) = Tarot::CARDINAL_MODIFIER[orientation]
 
-    binding.pry unless (0..8).cover?(x + offset_x)
-    binding.pry unless (0..8).cover?(y + offset_y)
-
     state.current_tableau.land[y + offset_y][x + offset_x] = tile[:r]
-
-    # binding.pry unless state.current_tableau.legal_size?
 
     # we lose the ID of the tile here, but it's not really important anymore.
     state.board.placing_tile = nil

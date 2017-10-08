@@ -19,8 +19,6 @@ class Tarot::Tableau
   end
 
   def score
-    #cells = land.inject([]) { |accum, tile| accum << tile[:l] << tile[:r] }
-    #properties = cells.inject({}) do |accum, cell|
     properties = land.flatten.inject({}) do |accum, cell|
       next accum if cell.nil?
       if accum[cell[:terrain]].nil?
@@ -48,11 +46,6 @@ class Tarot::Tableau
         yield x, y, self[x, y]
       end
     end
-  end
-
-  def legal_size?
-    (x_min, x_max, y_min, y_max) = tableau_bounds
-    x_max - x_min < Tarot::MAX_SIZE && y_max - y_min < Tarot::MAX_SIZE
   end
 
   def tableau_bounds
@@ -100,11 +93,6 @@ class Tarot::Tableau
     when :e # && wide
       x_max_range -= 1
     end
-
-    # binding.pry unless (0..8).cover?(y_min_range) && (0..8).cover?(y_max_range) &&
-    #   (0..8).cover?(x_min_range) && (0..8).cover?(x_max_range)
-
-    print "#{dir} y:(#{y_min_range}..#{y_max_range}) x:(#{x_min_range}..#{x_max_range})\n"
 
     (y_min_range..y_max_range).map do |y|
       (x_min_range..x_max_range).map do |x|
