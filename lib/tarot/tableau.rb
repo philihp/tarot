@@ -19,7 +19,13 @@ class Tarot::Tableau
   end
 
   def score
+
     properties = land.flatten.inject({}) do |accum, cell|
+
+      # BIG TODO: this needs to figure out properties by doing a flood fill of every cell
+      # by its terrain type. Going to hold off on this because it would be dank to do this
+      # with a functional injecty goodness thinger.
+
       next accum if cell.nil?
       if accum[cell[:terrain]].nil?
         accum[cell[:terrain]] = { size: 1, crowns: cell[:crowns] }
