@@ -95,6 +95,13 @@ class Tarot::State < MCTS::State
     @tableaus.each_index.max_by { |i| @tableaus[i].score }
   end
 
+  def score_text
+    scores = Array.new(players, 0)
+    winner = winning_player
+    scores[winner] = 1 if winner
+    scores
+  end
+
   def claim_moves
     @board.new_claims.each.with_index.inject([]) do |accum,(val,i)|
       accum << "claim #{i}" if val.nil?
