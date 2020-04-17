@@ -1,3 +1,6 @@
+![Ruby](https://github.com/philihp/tarot/workflows/Ruby/badge.svg)
+[![Build Status](https://travis-ci.com/philihp/tarot.svg?branch=master)](https://travis-ci.com/philihp/tarot)
+
 # Tarot
 
 This is an implementation of Kingdominion that I wrote so I could write an AI to play against.
